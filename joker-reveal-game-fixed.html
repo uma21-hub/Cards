@@ -1,0 +1,1778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🃏 Joker Reveal – Big Set Challenge</title>
+
+<!-- ── FIREBASE SDK ── -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+
+<!-- ── FIREBASE CONFIG ── -->
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyDXvMeNNVDVZYlUY4uJk49LV_WdZzOBdPs",
+  authDomain: "cards-3344f.firebaseapp.com",
+  databaseURL: "https://cards-3344f-default-rtdb.firebaseio.com",
+  projectId: "cards-3344f",
+  storageBucket: "cards-3344f.firebasestorage.app",
+  messagingSenderId: "531217205061",
+  appId: "1:531217205061:web:7517eea7d825728945e02c",
+  measurementId: "G-8W29812YC8"
+};
+firebase.initializeApp(firebaseConfig);
+var db = firebase.database();
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#06111a;--green:#16a34a;--gold:#f5c842;--orange:#f97316;
+  --red:#e63946;--blue:#3b82f6;--purple:#7c3aed;--teal:#14b8a6;
+  --white:#f0f4f8;--dim:rgba(255,255,255,.38);
+  --gg:0 0 18px rgba(245,200,66,.5);--gr:0 0 14px rgba(230,57,70,.5);--ggn:0 0 12px rgba(22,163,74,.4);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);font-family:'Exo 2',sans-serif;color:var(--white);width:100vw;height:100vh;overflow:hidden;
+  background-image:radial-gradient(ellipse 80% 55% at 50% 0%,#0d2a1a 0%,transparent 65%);}
+.scr{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:5;}
+.scr.on{display:flex;}
+
+/* ── LANDING ── */
+.ltitle{font-size:56px;font-weight:900;letter-spacing:5px;text-align:center;
+  background:linear-gradient(135deg,var(--gold),var(--orange),var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 0 26px rgba(245,200,66,.3));}
+.ldeck{display:flex;gap:9px;margin:28px 0 36px;}
+.lc{width:52px;height:74px;border-radius:7px;background:#fff;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;font-size:20px;font-weight:900;box-shadow:0 8px 22px rgba(0,0,0,.5);}
+.lc.r{color:#e63946;}.lc.b{color:#111;}
+@keyframes lf{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-9px) rotate(3deg)}}
+.lc:nth-child(1){animation:lf 2.4s 0s ease-in-out infinite;}
+.lc:nth-child(2){animation:lf 2.4s .4s ease-in-out infinite;}
+.lc:nth-child(3){animation:lf 2.4s .8s ease-in-out infinite;}
+.lc:nth-child(4){animation:lf 2.4s 1.2s ease-in-out infinite;}
+.lc:nth-child(5){animation:lf 2.4s 1.6s ease-in-out infinite;}
+
+/* ── MODE ── */
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:18px;width:540px;margin-top:22px;}
+.mbox{background:rgba(255,255,255,.04);border:2px solid rgba(255,255,255,.09);border-radius:18px;
+  padding:30px 20px;text-align:center;cursor:pointer;transition:all .3s;
+  display:flex;flex-direction:column;align-items:center;gap:10px;}
+.mbox:hover{transform:translateY(-6px);}
+.mbox.ai:hover{border-color:var(--purple);box-shadow:0 0 28px rgba(124,58,237,.3);}
+.mbox.mp:hover{border-color:var(--teal);box-shadow:0 0 28px rgba(20,184,166,.3);}
+.micon{font-size:48px;}.mtitle{font-size:17px;font-weight:800;letter-spacing:2px;}
+.mdesc{font-size:11px;color:var(--dim);font-family:'Rajdhani',sans-serif;line-height:1.6;}
+
+/* ── ROOM ── */
+.rgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px;width:540px;}
+.rpanel{background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.09);
+  border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:11px;}
+.rpanel h3{font-size:16px;font-weight:800;letter-spacing:1px;}
+
+/* ── LOBBY ── */
+.lrow{display:flex;gap:13px;width:700px;}
+.lleft{flex:1;display:flex;flex-direction:column;gap:10px;}
+.lright{width:228px;display:flex;flex-direction:column;gap:10px;}
+.lbox{background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.08);border-radius:12px;padding:13px;}
+.lbox h4{font-size:10px;color:var(--dim);letter-spacing:1.5px;text-transform:uppercase;
+  font-family:'Rajdhani',sans-serif;font-weight:700;margin-bottom:8px;}
+.codebig{font-size:36px;font-weight:900;letter-spacing:10px;color:var(--gold);
+  text-align:center;font-family:'Rajdhani',sans-serif;text-shadow:var(--gg);padding:6px 0;}
+.codehint{font-size:10px;color:var(--dim);text-align:center;font-family:'Rajdhani',sans-serif;margin-top:2px;}
+.pslot{display:flex;align-items:center;gap:8px;padding:6px 9px;border-radius:7px;
+  background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);margin-bottom:5px;}
+.pdot{width:9px;height:9px;border-radius:50%;}
+.dg{background:var(--green);box-shadow:0 0 5px var(--green);}
+.dy{background:var(--gold);}.dgr{background:#4b5563;}
+.pcoins{margin-left:auto;font-size:10px;color:var(--gold);font-family:'Rajdhani',sans-serif;font-weight:700;}
+.opts{display:flex;gap:5px;flex-wrap:wrap;}
+.opt{padding:5px 10px;border-radius:7px;border:1.5px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.04);color:var(--dim);font-size:11px;font-weight:700;
+  cursor:pointer;transition:all .2s;font-family:'Exo 2',sans-serif;}
+.opt:hover,.opt.sel{border-color:var(--gold);color:var(--gold);background:rgba(245,200,66,.1);}
+.opt:disabled{opacity:.3;cursor:default;}
+.inp{background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.14);
+  border-radius:8px;padding:9px 12px;color:#fff;font-family:'Exo 2',sans-serif;
+  font-size:13px;font-weight:600;outline:none;width:100%;letter-spacing:1px;}
+.inp:focus{border-color:var(--gold);}
+.inp::placeholder{color:rgba(255,255,255,.22);letter-spacing:0;}
+.ilbl{font-size:10px;color:var(--dim);letter-spacing:1px;margin-bottom:4px;display:block;
+  font-family:'Rajdhani',sans-serif;font-weight:600;}
+
+/* ── BUTTONS ── */
+.btn{padding:8px 16px;border-radius:8px;border:none;font-weight:800;font-size:12px;
+  cursor:pointer;transition:all .15s;letter-spacing:.5px;font-family:'Exo 2',sans-serif;
+  display:inline-flex;align-items:center;gap:5px;white-space:nowrap;}
+.btn:disabled{opacity:.22;cursor:not-allowed;transform:none!important;}
+.btn:not(:disabled):hover{transform:translateY(-2px);}
+.btn:not(:disabled):active{transform:scale(.96);}
+.bgold{background:linear-gradient(135deg,var(--gold),var(--orange));color:#111;font-weight:900;box-shadow:var(--gg);}
+.bgold:not(:disabled):hover{box-shadow:0 0 28px rgba(245,200,66,.65);}
+.bghost{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.13);color:var(--dim);}
+.bghost:hover{background:rgba(255,255,255,.1);}
+.bgrn{background:rgba(22,163,74,.18);border:1px solid var(--green);color:#4ade80;}
+.bpur{background:rgba(124,58,237,.18);border:1px solid var(--purple);color:#c4b5fd;}
+.bbl{background:rgba(59,130,246,.17);border:1px solid var(--blue);color:#93c5fd;}
+.bor{background:rgba(249,115,22,.17);border:1px solid var(--orange);color:#fdba74;}
+.bred{background:rgba(230,57,70,.14);border:1px solid rgba(230,57,70,.4);color:#fca5a5;}
+.bteal{background:rgba(20,184,166,.17);border:1px solid var(--teal);color:#5eead4;}
+.bsm{padding:4px 8px;font-size:11px;border-radius:6px;}
+.bxs{padding:2px 6px;font-size:10px;border-radius:5px;}
+.kbadge{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);
+  border-radius:3px;padding:0 4px;font-size:10px;color:var(--gold);font-weight:700;line-height:1.6;}
+
+/* ── GAME BOARD ── */
+#sg{position:fixed;inset:0;display:none;flex-direction:column;}
+#gr{display:grid;grid-template-rows:44px 136px 86px 36px 100px 1fr;
+  height:100vh;padding:5px 8px;gap:4px;}
+#ibar{display:flex;align-items:center;justify-content:space-between;}
+.gtitle{font-size:16px;font-weight:900;letter-spacing:2px;
+  background:linear-gradient(90deg,var(--gold),var(--orange));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.schips{display:flex;gap:7px;align-items:center;}
+.chip{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.11);
+  border-radius:18px;padding:3px 10px;font-size:11px;font-weight:700;
+  font-family:'Rajdhani',sans-serif;display:flex;align-items:center;gap:5px;}
+.cg{color:var(--gold);}.cc{color:#4ade80;}
+#rpill{padding:3px 10px;border-radius:18px;font-size:11px;font-weight:700;
+  background:rgba(59,130,246,.17);border:1px solid var(--blue);color:#93c5fd;
+  font-family:'Rajdhani',sans-serif;letter-spacing:1px;}
+#tpill{padding:3px 11px;border-radius:18px;font-size:11px;font-weight:700;
+  letter-spacing:1.5px;text-transform:uppercase;transition:all .3s;font-family:'Rajdhani',sans-serif;}
+.tyou{background:rgba(22,163,74,.2);border:1px solid var(--green);color:#4ade80;}
+.tai{background:rgba(124,58,237,.2);border:1px solid var(--purple);color:#a78bfa;}
+.twait{background:rgba(107,114,128,.18);border:1px solid #6b7280;color:#9ca3af;}
+#opprow{display:flex;gap:8px;background:rgba(0,0,0,.18);border-radius:11px;
+  border:1px solid rgba(255,255,255,.05);padding:7px;align-items:flex-start;overflow:hidden;}
+#rzone{width:96px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;gap:3px;}
+#speech{background:rgba(3,14,8,.95);border:1.5px solid var(--gold);border-radius:9px;
+  border-bottom-left-radius:2px;padding:4px 7px;font-size:10px;color:var(--gold);
+  max-width:95px;min-height:24px;text-align:center;line-height:1.4;
+  font-family:'Rajdhani',sans-serif;font-weight:600;}
+#oppzone{flex:1;display:flex;flex-direction:column;gap:3px;min-width:0;}
+.zlbl{font-size:9px;color:var(--dim);letter-spacing:1.2px;text-transform:uppercase;
+  font-family:'Rajdhani',sans-serif;font-weight:600;}
+#ophnd{display:flex;flex-wrap:wrap;gap:2px;min-height:44px;}
+#opinfo{font-size:10px;color:#a78bfa;font-family:'Rajdhani',sans-serif;font-weight:600;}
+#dlog{font-size:9px;color:rgba(255,255,255,.35);font-family:'Rajdhani',sans-serif;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+#crow{display:flex;justify-content:center;align-items:center;gap:14px;
+  background:rgba(0,0,0,.14);border-radius:10px;border:1px solid rgba(255,255,255,.04);}
+.pzone{display:flex;flex-direction:column;align-items:center;gap:3px;}
+.plbl{font-size:9px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;font-family:'Rajdhani',sans-serif;}
+.pcnt{font-size:9px;color:rgba(255,255,255,.28);font-family:'Rajdhani',sans-serif;}
+.pempty{width:52px;height:74px;border-radius:6px;border:2px dashed rgba(255,255,255,.11);}
+.csep{width:1px;height:42px;background:rgba(255,255,255,.06);}
+#jlbl{font-size:9px;color:var(--orange);text-align:center;font-family:'Rajdhani',sans-serif;font-weight:700;}
+#dopz{display:none;flex-direction:column;align-items:center;gap:3px;}
+#sbar{display:flex;align-items:center;justify-content:space-between;gap:6px;
+  background:rgba(0,0,0,.16);border-radius:8px;border:1px solid rgba(255,255,255,.04);padding:0 10px;}
+#stxt{flex:1;text-align:center;font-size:12px;font-weight:700;font-family:'Rajdhani',sans-serif;letter-spacing:.3px;}
+.sn{color:var(--gold);}.se{color:var(--red);}.ss{color:#4ade80;}.si{color:var(--blue);}
+#kbb{font-size:10px;color:rgba(255,255,255,.22);cursor:pointer;}
+#kbb:hover{color:var(--gold);}
+#setsarea{display:flex;gap:5px;background:rgba(0,0,0,.17);border-radius:10px;
+  border:1px solid rgba(255,255,255,.04);padding:5px;}
+.sslot{flex:1;border:1.5px dashed rgba(255,255,255,.1);border-radius:8px;
+  padding:4px;display:flex;flex-direction:column;gap:3px;transition:all .3s;overflow:hidden;}
+.sslot.bs{border-color:rgba(245,200,66,.22);background:rgba(245,200,66,.03);}
+.sslot.done{border-color:#22c55e;border-style:solid;background:rgba(34,197,94,.06);box-shadow:var(--ggn);}
+.sslot.bs.done{border-color:var(--gold);box-shadow:var(--gg);}
+.stitle{font-size:9px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;
+  font-family:'Rajdhani',sans-serif;font-weight:700;}
+.scards{display:flex;gap:2px;flex-wrap:wrap;flex:1;align-items:flex-start;}
+.sle{width:37px;height:52px;border-radius:4px;border:1px dashed rgba(255,255,255,.09);}
+.sleg{border-color:rgba(245,200,66,.17);}
+#pzone{background:rgba(0,0,0,.17);border-radius:10px;border:1px solid rgba(255,255,255,.04);
+  padding:6px;display:flex;flex-direction:column;gap:4px;overflow:hidden;}
+.prow{display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap;}
+.hlbl{font-size:9px;color:var(--dim);letter-spacing:1px;text-transform:uppercase;
+  font-family:'Rajdhani',sans-serif;font-weight:600;}
+#hcnt{color:rgba(255,255,255,.28);}
+#ctrl{display:flex;gap:3px;flex-wrap:wrap;align-items:center;}
+#phnd{display:flex;flex-wrap:wrap;gap:3px;min-height:62px;align-items:flex-start;}
+
+/* ── CARDS ── */
+.card{width:52px;height:74px;border-radius:6px;background:#fff;border:1.5px solid #ddd;
+  display:flex;flex-direction:column;justify-content:space-between;padding:2px 3px;
+  cursor:pointer;font-weight:800;font-size:12px;
+  transition:transform .12s,box-shadow .12s,border-color .12s;
+  user-select:none;flex-shrink:0;box-shadow:1px 2px 5px rgba(0,0,0,.4);font-family:'Exo 2',sans-serif;}
+.card.r{color:#e63946;}.card.b{color:#111;}
+.card:hover:not(.fd):not(.nh){transform:translateY(-5px);box-shadow:2px 7px 16px rgba(0,0,0,.45);}
+.card.sel{transform:translateY(-15px)!important;border-color:var(--gold)!important;border-width:2px!important;box-shadow:0 9px 22px rgba(245,200,66,.55)!important;}
+.card.fd{background:repeating-linear-gradient(135deg,#1e3a8a 0 5px,#2855c9 5px 10px);border:1.5px solid #3b82f6;cursor:default;}
+.card.wild{border-color:var(--orange)!important;border-width:2px;box-shadow:0 0 9px rgba(249,115,22,.45);}
+.card.ins{border-color:#22c55e;}
+.card.dop{transform:rotate(180deg)!important;border-color:var(--orange)!important;box-shadow:var(--gr)!important;}
+.ct,.cb{display:flex;flex-direction:column;align-items:flex-start;line-height:1.1;font-size:11px;}
+.cb{align-items:flex-end;transform:rotate(180deg);}
+.cm{text-align:center;font-size:18px;line-height:1;}
+.card.csm{width:37px!important;height:52px!important;}
+.card.csm .ct,.card.csm .cb{font-size:9px;}.card.csm .cm{font-size:13px;}
+.card.cmi{width:26px!important;height:38px!important;border-radius:4px!important;}
+.card.clg{width:84px!important;height:118px!important;}
+.card.clg .ct,.card.clg .cb{font-size:15px;}.card.clg .cm{font-size:26px;}
+
+/* ── ROBOT ── */
+@keyframes rfl{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes rbo{0%,100%{transform:translateY(0) scaleY(1)}40%{transform:translateY(-13px) scaleY(1.07)}}
+@keyframes rwi{0%,100%{transform:rotate(0)}25%{transform:rotate(-7deg)}75%{transform:rotate(7deg)}}
+@keyframes rcl{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px) rotate(-3deg)}75%{transform:translateX(7px) rotate(3deg)}}
+@keyframes awl{0%,100%{transform:rotate(0)}50%{transform:rotate(-48deg)}}
+@keyframes awr{0%,100%{transform:rotate(0)}50%{transform:rotate(48deg)}}
+@keyframes lb{0%,100%{opacity:1}50%{opacity:.15}}
+.rf{animation:rfl 2.2s ease-in-out infinite;}
+.rb{animation:rbo .44s ease-in-out infinite;}
+.rw{animation:rwi .3s ease-in-out 4;}
+.rc{animation:rcl .55s ease-in-out infinite;}
+.rd{animation:rfl .6s ease-in-out infinite;}
+
+/* ── DEALER OVERLAY ── */
+#dealov{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:80;
+  display:none;flex-direction:column;align-items:center;justify-content:center;}
+#dealwrap{display:flex;flex-direction:column;align-items:center;gap:8px;}
+#dealsp{background:rgba(3,14,8,.96);border:1.5px solid var(--gold);border-radius:11px;
+  padding:8px 18px;font-size:13px;color:var(--gold);text-align:center;
+  font-family:'Rajdhani',sans-serif;font-weight:700;min-width:210px;}
+#dealbar-wrap{width:210px;height:4px;background:rgba(255,255,255,.09);border-radius:2px;overflow:hidden;margin-top:10px;}
+#dealbar{height:100%;background:linear-gradient(90deg,var(--gold),var(--orange));border-radius:2px;width:0%;transition:width .15s;}
+#flycards{position:fixed;inset:0;pointer-events:none;z-index:81;}
+.flyc{position:fixed;width:42px;height:60px;border-radius:5px;pointer-events:none;
+  background:repeating-linear-gradient(135deg,#1e3a8a 0 4px,#2855c9 4px 8px);border:1.5px solid #3b82f6;}
+
+/* ── KEYBOARD GUIDE ── */
+#kbguide{position:fixed;bottom:10px;right:10px;background:rgba(3,12,8,.96);
+  border:1.5px solid rgba(245,200,66,.38);border-radius:11px;padding:11px 15px;z-index:60;display:none;}
+#kbguide.vis{display:block;}
+.kbr{display:flex;justify-content:space-between;gap:18px;font-size:11px;padding:2px 0;font-family:'Rajdhani',sans-serif;}
+.kk{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:3px;
+  padding:0 5px;font-weight:700;color:var(--gold);font-size:11px;}
+.kd{color:var(--dim);}
+.kt{font-size:10px;color:var(--gold);font-weight:700;letter-spacing:1px;margin-bottom:5px;text-align:center;font-family:'Rajdhani',sans-serif;}
+
+/* ── TOASTS ── */
+#toasts{position:fixed;top:56px;right:12px;z-index:90;display:flex;flex-direction:column;gap:5px;pointer-events:none;}
+.toast{border:1.5px solid;border-radius:9px;padding:7px 13px;font-size:12px;
+  font-family:'Rajdhani',sans-serif;font-weight:700;max-width:230px;
+  animation:tin .3s ease-out,tout .4s 2.3s ease-in forwards;pointer-events:none;}
+.tgold{border-color:var(--gold);color:var(--gold);background:rgba(5,18,10,.96);}
+.tgreen{border-color:var(--green);color:#4ade80;background:rgba(5,18,10,.96);}
+.tred{border-color:var(--red);color:#fca5a5;background:rgba(5,18,10,.96);}
+.tblue{border-color:var(--blue);color:#93c5fd;background:rgba(5,18,10,.96);}
+@keyframes tin{from{transform:translateX(28px);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes tout{from{opacity:1}to{opacity:0;transform:translateX(28px)}}
+
+/* ── JOKER PRIVATE ── */
+#jpriv{position:fixed;inset:0;background:rgba(0,0,0,.92);display:none;
+  flex-direction:column;align-items:center;justify-content:center;z-index:85;gap:14px;backdrop-filter:blur(4px);}
+#jpriv h2{font-size:24px;font-weight:900;color:var(--gold);letter-spacing:3px;text-shadow:var(--gg);}
+.jpsub{font-size:13px;color:var(--orange);font-family:'Rajdhani',sans-serif;font-weight:700;}
+
+/* ── RESULT ── */
+#resov{position:fixed;inset:0;background:rgba(0,0,0,.9);display:none;
+  align-items:center;justify-content:center;z-index:95;backdrop-filter:blur(4px);}
+#resov.on{display:flex;}
+.modal{background:linear-gradient(145deg,#0c2216,#06111a);border:2px solid var(--gold);
+  border-radius:16px;padding:26px;max-width:500px;width:92%;text-align:center;
+  box-shadow:0 0 55px rgba(245,200,66,.18);}
+.modal h2{font-size:24px;font-weight:900;letter-spacing:2px;margin-bottom:6px;}
+.modal p{color:rgba(255,255,255,.78);font-size:13px;line-height:1.6;margin-bottom:9px;}
+.modal strong{color:var(--gold);}
+.rstats{background:rgba(0,0,0,.33);border-radius:9px;padding:11px;text-align:left;
+  font-size:12px;line-height:2;border:1px solid rgba(255,255,255,.06);margin-bottom:13px;}
+.cdelta{font-size:22px;font-weight:900;font-family:'Rajdhani',sans-serif;letter-spacing:2px;padding:6px 0;}
+.cpos{color:#4ade80;}.cneg{color:var(--red);}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0;}
+.fcard{background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.09);border-radius:9px;padding:11px;}
+.fn{font-size:11px;color:var(--dim);font-family:'Rajdhani',sans-serif;}
+.fc{font-size:22px;font-weight:900;color:var(--gold);}
+.fw{font-size:11px;color:#4ade80;}
+
+/* ── CONNECTING OVERLAY ── */
+#mpconn{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;
+  flex-direction:column;align-items:center;justify-content:center;gap:18px;z-index:70;backdrop-filter:blur(4px);}
+#mpconn.on{display:flex;}
+.spinner{width:48px;height:48px;border:4px solid rgba(245,200,66,.2);
+  border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite;}
+@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+
+/* ── MISC ── */
+@keyframes popin{0%{transform:scale(0) rotateY(180deg)}60%{transform:scale(1.14) rotateY(0)}100%{transform:scale(1)}}
+.popin{animation:popin .45s cubic-bezier(.34,1.56,.64,1);}
+@keyframes cfall{0%{opacity:1;transform:translateY(-10px) rotate(0)}100%{opacity:0;transform:translateY(105vh) rotate(720deg)}}
+.confetti{position:fixed;width:9px;height:9px;pointer-events:none;z-index:999;animation:cfall 2.1s ease-in forwards;}
+</style>
+</head>
+<body>
+
+<!-- ══ LANDING ══ -->
+<div class="scr on" id="s-landing">
+  <div class="ltitle">🃏 JOKER REVEAL</div>
+  <div style="font-size:13px;letter-spacing:3px;color:var(--dim);margin-top:6px;font-family:'Rajdhani',sans-serif;text-transform:uppercase;">Big Set Challenge · Card Game</div>
+  <div class="ldeck">
+    <div class="lc r">K<br>♥</div><div class="lc b">A<br>♠</div>
+    <div class="lc b" style="font-size:26px;">🃏</div>
+    <div class="lc r">Q<br>♦</div><div class="lc b">J<br>♣</div>
+  </div>
+  <button class="btn bgold" style="font-size:15px;padding:13px 46px;border-radius:13px;letter-spacing:3px;" onclick="go('mode')">PLAY NOW</button>
+  <div style="margin-top:13px;font-size:11px;color:var(--dim);font-family:'Rajdhani',sans-serif;">Form 1 Big Set + 3 Small Sets · Reveal the Secret Joker · Declare SHOW</div>
+</div>
+
+<!-- ══ MODE ══ -->
+<div class="scr" id="s-mode">
+  <div style="font-size:26px;font-weight:900;letter-spacing:3px;color:var(--gold);margin-bottom:8px;">SELECT MODE</div>
+  <div style="font-size:11px;color:var(--dim);font-family:'Rajdhani',sans-serif;letter-spacing:1px;">Choose how you want to play</div>
+  <div class="mgrid">
+    <div class="mbox ai" onclick="pickMode('ai')">
+      <div class="micon">🤖</div>
+      <div class="mtitle" style="color:#a78bfa;">VS ARTIFICIAL<br>INTELLIGENCE</div>
+      <div class="mdesc">Play against a smart AI on this device. Great for solo practice!</div>
+      <span class="btn bpur bsm" style="pointer-events:none;margin-top:5px;">Play vs AI →</span>
+    </div>
+    <div class="mbox mp" onclick="pickMode('mp')">
+      <div class="micon">🌐</div>
+      <div class="mtitle" style="color:#5eead4;">ONLINE<br>MULTIPLAYER</div>
+      <div class="mdesc">Play with friends anywhere! Powered by <strong style="color:var(--gold);">Firebase</strong> — works across all devices &amp; networks.</div>
+      <span class="btn bteal bsm" style="pointer-events:none;margin-top:5px;">Play Online →</span>
+    </div>
+  </div>
+  <button class="btn bghost" style="margin-top:18px;" onclick="go('landing')">← Back</button>
+</div>
+
+<!-- ══ ROOM ══ -->
+<div class="scr" id="s-room">
+  <div style="font-size:23px;font-weight:900;letter-spacing:3px;color:var(--teal);margin-bottom:5px;">🌐 ONLINE MULTIPLAYER</div>
+  <div style="font-size:10px;color:var(--dim);font-family:'Rajdhani',sans-serif;margin-bottom:16px;">Powered by Firebase Realtime Database · Works on any device, any network</div>
+  <div style="width:520px;margin-bottom:13px;">
+    <label class="ilbl">YOUR NAME</label>
+    <input class="inp" id="pname" placeholder="Enter your name…" maxlength="16" style="font-size:14px;text-align:center;">
+  </div>
+  <div class="rgrid">
+    <div class="rpanel">
+      <h3 style="color:var(--gold);">🏠 Create Room</h3>
+      <div style="font-size:11px;color:var(--dim);font-family:'Rajdhani',sans-serif;line-height:1.6;">
+        Host a new game room. A unique 6-character room code is generated. Share it with your friend!
+      </div>
+      <button class="btn bgold" onclick="createRoom()">Create Room →</button>
+    </div>
+    <div class="rpanel">
+      <h3 style="color:var(--teal);">🔗 Join Room</h3>
+      <label class="ilbl">ROOM CODE FROM FRIEND</label>
+      <input class="inp" id="jcode" placeholder="ABC123" maxlength="6"
+        style="text-transform:uppercase;letter-spacing:5px;text-align:center;"
+        oninput="this.value=this.value.toUpperCase()">
+      <button class="btn bteal" onclick="joinRoom()">Join Room →</button>
+    </div>
+  </div>
+  <button class="btn bghost" style="margin-top:14px;" onclick="go('mode')">← Back</button>
+</div>
+
+<!-- ══ LOBBY ══ -->
+<div class="scr" id="s-lobby">
+  <div style="font-size:20px;font-weight:900;letter-spacing:3px;color:var(--teal);margin-bottom:12px;">🌐 GAME LOBBY</div>
+  <div class="lrow">
+    <div class="lleft">
+      <div class="lbox">
+        <h4>Room Code — Share this with your friend!</h4>
+        <div class="codebig" id="lbcode">——</div>
+        <div class="codehint">Friend visits this page → Online Multiplayer → Join Room → enters this code</div>
+        <div class="codehint" style="margin-top:6px;" id="conn-status">⏳ Waiting for players…</div>
+      </div>
+      <div class="lbox">
+        <h4>Players in Room</h4>
+        <div id="lbplayers"></div>
+        <div id="lbwait" style="font-size:11px;color:var(--dim);font-family:'Rajdhani',sans-serif;text-align:center;padding:6px 0;">Need at least 2 players to start…</div>
+      </div>
+    </div>
+    <div class="lright">
+      <div class="lbox">
+        <h4>⚙ Game Settings</h4>
+        <label class="ilbl" style="margin-bottom:4px;">ROUNDS</label>
+        <div class="opts" id="ropts">
+          <button class="opt" data-v="1" onclick="setRounds(1)">1</button>
+          <button class="opt sel" data-v="3" onclick="setRounds(3)">3</button>
+          <button class="opt" data-v="5" onclick="setRounds(5)">5</button>
+          <button class="opt" data-v="7" onclick="setRounds(7)">7</button>
+          <button class="opt" data-v="10" onclick="setRounds(10)">10</button>
+        </div>
+        <label class="ilbl" style="margin-top:8px;margin-bottom:4px;">COINS BET / ROUND</label>
+        <div class="opts" id="bopts">
+          <button class="opt" data-v="50" onclick="setBet(50)">50</button>
+          <button class="opt sel" data-v="100" onclick="setBet(100)">100</button>
+          <button class="opt" data-v="200" onclick="setBet(200)">200</button>
+          <button class="opt" data-v="500" onclick="setBet(500)">500</button>
+        </div>
+      </div>
+      <div class="lbox" style="text-align:center;">
+        <h4>💰 Your Coins</h4>
+        <div id="lbcoins" style="font-size:30px;font-weight:900;color:var(--gold);font-family:'Rajdhani',sans-serif;"></div>
+      </div>
+      <div id="lbnote" style="font-size:10px;color:var(--dim);text-align:center;font-family:'Rajdhani',sans-serif;"></div>
+      <button class="btn bgold" id="startbtn" onclick="hostStartGame()" disabled style="width:100%;justify-content:center;">⚡ Start Game</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ GAME BOARD ══ -->
+<div id="sg">
+<div id="gr">
+
+  <div id="ibar">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div class="gtitle">🃏 JOKER REVEAL</div>
+      <div id="rpill">Round 1/3</div>
+    </div>
+    <div class="schips" id="scorechips"></div>
+    <div style="display:flex;align-items:center;gap:6px;">
+      <div id="tpill" class="tyou">YOUR TURN</div>
+      <button class="btn bghost bxs" onclick="leaveGame()" style="font-size:9px;">✕ Quit</button>
+    </div>
+  </div>
+
+  <div id="opprow">
+    <div id="rzone">
+      <svg id="rsvg" viewBox="0 0 110 148" width="78" height="104" class="rf">
+        <line x1="55" y1="3" x2="55" y2="21" stroke="#60a5fa" stroke-width="2.5" stroke-linecap="round"/>
+        <circle id="ant" cx="55" cy="3" r="5.5" fill="var(--gold)"/>
+        <rect x="20" y="21" width="70" height="50" rx="12" fill="#1e3a8a" stroke="#3b82f6" stroke-width="1.5"/>
+        <rect x="23" y="23" width="64" height="11" rx="5" fill="rgba(255,255,255,.07)"/>
+        <ellipse cx="39" cy="42" rx="10.5" ry="10.5" fill="#0f172a"/>
+        <ellipse cx="71" cy="42" rx="10.5" ry="10.5" fill="#0f172a"/>
+        <g id="eyl" style="transform-origin:39px 42px">
+          <ellipse cx="39" cy="42" rx="7.5" ry="7.5" fill="white"/>
+          <circle cx="39" cy="42" r="4.8" fill="#3b82f6"/>
+          <circle cx="41" cy="40" r="1.7" fill="white"/>
+        </g>
+        <g id="eyr" style="transform-origin:71px 42px">
+          <ellipse cx="71" cy="42" rx="7.5" ry="7.5" fill="white"/>
+          <circle cx="71" cy="42" r="4.8" fill="#3b82f6"/>
+          <circle cx="73" cy="40" r="1.7" fill="white"/>
+        </g>
+        <path id="rmo" d="M 36 61 Q 55 70 74 61" stroke="#00d4ff" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+        <rect x="14" y="76" width="82" height="54" rx="11" fill="#1e3a8a" stroke="#3b82f6" stroke-width="1.5"/>
+        <rect x="27" y="85" width="56" height="37" rx="7" fill="#0f172a"/>
+        <rect x="31" y="99" width="48" height="17" rx="4" fill="#020617"/>
+        <text id="chest" x="55" y="112" text-anchor="middle" fill="#00d4ff" font-size="7" font-family="'Exo 2',monospace" font-weight="700" letter-spacing="1">READY</text>
+        <circle id="ld1" cx="37" cy="92" r="3.2" fill="#ef4444"/>
+        <circle id="ld2" cx="55" cy="92" r="3.2" fill="#22c55e"/>
+        <circle id="ld3" cx="73" cy="92" r="3.2" fill="#f59e0b"/>
+        <g id="arl" style="transform-origin:16px 83px">
+          <rect x="3" y="79" width="15" height="42" rx="7.5" fill="#1d4ed8" stroke="#3b82f6" stroke-width="1.2"/>
+          <circle cx="10.5" cy="121" r="5.5" fill="#1e40af"/>
+        </g>
+        <g id="arr" style="transform-origin:94px 83px">
+          <rect x="92" y="79" width="15" height="42" rx="7.5" fill="#1d4ed8" stroke="#3b82f6" stroke-width="1.2"/>
+          <circle cx="99.5" cy="121" r="5.5" fill="#1e40af"/>
+        </g>
+        <ellipse cx="32" cy="135" rx="12" ry="5.5" fill="#111" stroke="#333" stroke-width="1"/>
+        <ellipse cx="78" cy="135" rx="12" ry="5.5" fill="#111" stroke="#333" stroke-width="1"/>
+      </svg>
+      <div id="speech">Let's play! 🎴</div>
+    </div>
+    <div id="oppzone">
+      <div class="zlbl" id="oplbl">🤖 AI OPPONENT</div>
+      <div id="ophnd"></div>
+      <div id="opinfo"></div>
+      <div id="dlog"></div>
+    </div>
+  </div>
+
+  <div id="crow">
+    <div class="pzone">
+      <div class="plbl">Secret Joker</div>
+      <div id="sjoker" class="card fd nh" style="cursor:default;width:52px;height:74px;"></div>
+      <div id="jlbl">🔒 HIDDEN</div>
+    </div>
+    <div class="csep"></div>
+    <div class="pzone">
+      <div class="plbl">Draw Pile</div>
+      <div id="drawcard" class="card fd" onclick="actDraw()" style="width:52px;height:74px;display:flex;align-items:center;justify-content:center;">
+        <span style="color:rgba(255,255,255,.4);font-size:8px;font-weight:700;font-family:'Rajdhani',sans-serif;letter-spacing:1px;">DRAW</span>
+      </div>
+      <div class="pcnt" id="drawcnt">0 cards</div>
+    </div>
+    <div class="pzone">
+      <div class="plbl">Discard</div>
+      <div id="disctop" onclick="actPick()"></div>
+    </div>
+    <div class="csep"></div>
+    <div id="dopz" class="pzone">
+      <div class="plbl">🔄 Doper</div>
+      <div id="dopwrap"></div>
+    </div>
+  </div>
+
+  <div id="sbar">
+    <div id="stxt" class="sn">Welcome!</div>
+    <div id="kbb" onclick="toggleKb()">⌨ ?</div>
+  </div>
+
+  <div id="setsarea">
+    <div class="sslot bs" id="sl-big">
+      <div class="stitle">👑 BIG SET — 4 Natural (same rank, no Joker)</div>
+      <div class="scards" id="bigcards"></div>
+      <div style="display:flex;gap:3px;margin-top:2px;flex-wrap:wrap;">
+        <button class="btn bred bxs" id="clrbig" onclick="clearSet('big')" style="display:none;">✕</button>
+        <button class="btn bor bxs" id="btnrev" onclick="actReveal()" disabled>🎭 Reveal Joker</button>
+      </div>
+    </div>
+    <div class="sslot" id="sl-s1"><div class="stitle">Small Set 1</div>
+      <div class="scards" id="s1cards"></div>
+      <button class="btn bred bxs" id="clrs1" onclick="clearSet('s1')" style="display:none;margin-top:2px;">✕ Clear</button></div>
+    <div class="sslot" id="sl-s2"><div class="stitle">Small Set 2</div>
+      <div class="scards" id="s2cards"></div>
+      <button class="btn bred bxs" id="clrs2" onclick="clearSet('s2')" style="display:none;margin-top:2px;">✕ Clear</button></div>
+    <div class="sslot" id="sl-s3"><div class="stitle">Small Set 3</div>
+      <div class="scards" id="s3cards"></div>
+      <button class="btn bred bxs" id="clrs3" onclick="clearSet('s3')" style="display:none;margin-top:2px;">✕ Clear</button></div>
+  </div>
+
+  <div id="pzone">
+    <div class="prow">
+      <div class="hlbl">🙋 YOUR HAND <span id="hcnt">(0)</span></div>
+      <div id="ctrl">
+        <button class="btn bgrn bsm" id="bdr" onclick="actDraw()"    disabled><span class="kbadge">D</span> Draw</button>
+        <button class="btn bpur bsm" id="bpk" onclick="actPick()"    disabled><span class="kbadge">P</span> Pick</button>
+        <button class="btn bsm" id="bbg" onclick="actBig()"     disabled style="background:rgba(245,200,66,.13);border:1px solid var(--gold);color:var(--gold);"><span class="kbadge">B</span> Big Set</button>
+        <button class="btn bbl bsm"  id="bs1" onclick="actSmall(1)"  disabled><span class="kbadge">1</span> S1</button>
+        <button class="btn bbl bsm"  id="bs2" onclick="actSmall(2)"  disabled><span class="kbadge">2</span> S2</button>
+        <button class="btn bbl bsm"  id="bs3" onclick="actSmall(3)"  disabled><span class="kbadge">3</span> S3</button>
+        <button class="btn bghost bsm" id="bdc" onclick="actDiscard()" disabled><span class="kbadge">X</span> Discard</button>
+        <button class="btn bgold bsm" id="bsh" onclick="actShow()"    disabled><span class="kbadge">S</span> SHOW!</button>
+      </div>
+    </div>
+    <div id="phnd"></div>
+  </div>
+
+</div>
+</div>
+
+<!-- DEALER OVERLAY -->
+<div id="dealov">
+  <div id="dealwrap">
+    <svg id="dealbot" viewBox="0 0 140 178" width="148" height="186" class="rd">
+      <line x1="70" y1="4" x2="70" y2="27" stroke="var(--gold)" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="70" cy="4" r="6.5" fill="var(--orange)"/>
+      <rect x="20" y="27" width="100" height="66" rx="15" fill="#1a3800" stroke="var(--gold)" stroke-width="2"/>
+      <rect x="24" y="30" width="92" height="13" rx="5" fill="rgba(245,200,66,.1)"/>
+      <ellipse cx="46" cy="55" rx="12.5" ry="12.5" fill="#0a1a00"/>
+      <ellipse cx="94" cy="55" rx="12.5" ry="12.5" fill="#0a1a00"/>
+      <g id="dbl" style="transform-origin:46px 55px">
+        <ellipse cx="46" cy="55" rx="9.5" ry="9.5" fill="white"/>
+        <circle cx="46" cy="55" r="6" fill="#22c55e"/>
+        <circle cx="48" cy="53" r="2.2" fill="white"/>
+      </g>
+      <g id="dbr" style="transform-origin:94px 55px">
+        <ellipse cx="94" cy="55" rx="9.5" ry="9.5" fill="white"/>
+        <circle cx="94" cy="55" r="6" fill="#22c55e"/>
+        <circle cx="96" cy="53" r="2.2" fill="white"/>
+      </g>
+      <path id="dbmo" d="M 47 72 Q 70 82 93 72" stroke="var(--gold)" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+      <rect x="10" y="98" width="120" height="60" rx="12" fill="#1a3800" stroke="var(--gold)" stroke-width="2"/>
+      <rect x="27" y="107" width="86" height="34" rx="7" fill="#0a1200"/>
+      <rect x="33" y="120" width="74" height="15" rx="4" fill="#020900"/>
+      <text x="70" y="132" text-anchor="middle" fill="var(--gold)" font-size="8" font-family="'Exo 2',monospace" font-weight="700" letter-spacing="2">DEALING</text>
+      <circle cx="42" cy="113" r="3.8" fill="#22c55e"/>
+      <circle cx="70" cy="113" r="3.8" fill="var(--gold)"/>
+      <circle cx="98" cy="113" r="3.8" fill="#22c55e"/>
+      <g id="dal" style="transform-origin:18px 106px">
+        <rect x="4" y="101" width="18" height="52" rx="9" fill="#2d6600" stroke="var(--gold)" stroke-width="1.5"/>
+        <circle cx="13" cy="153" r="7" fill="#1a3800" stroke="var(--gold)" stroke-width="1.5"/>
+      </g>
+      <g id="dar" style="transform-origin:122px 106px">
+        <rect x="118" y="101" width="18" height="52" rx="9" fill="#2d6600" stroke="var(--gold)" stroke-width="1.5"/>
+        <circle cx="127" cy="153" r="7" fill="#1a3800" stroke="var(--gold)" stroke-width="1.5"/>
+      </g>
+      <ellipse cx="38" cy="168" rx="15" ry="7" fill="#111" stroke="#333"/>
+      <ellipse cx="102" cy="168" rx="15" ry="7" fill="#111" stroke="#333"/>
+    </svg>
+    <div id="dealsp">🃏 Shuffling the deck…</div>
+    <div id="dealbar-wrap"><div id="dealbar"></div></div>
+  </div>
+  <div id="flycards"></div>
+</div>
+
+<!-- JOKER PRIVATE -->
+<div id="jpriv">
+  <div style="font-size:42px;animation:rbo .5s ease-in-out infinite;">🎭</div>
+  <h2>SECRET JOKER REVEALED!</h2>
+  <div id="jpcard"></div>
+  <div class="jpsub" id="jpsub">All ? are Wild!</div>
+  <button class="btn bgold" onclick="closeJp()" style="padding:10px 28px;">✓ Got it! Use as Wilds!</button>
+</div>
+
+<!-- KB GUIDE -->
+<div id="kbguide">
+  <div class="kt">⌨ KEYBOARD SHORTCUTS</div>
+  <div class="kbr"><span class="kk">D</span><span class="kd">Draw card</span></div>
+  <div class="kbr"><span class="kk">P</span><span class="kd">Pick top discard</span></div>
+  <div class="kbr"><span class="kk">B</span><span class="kd">Form Big Set (4 selected)</span></div>
+  <div class="kbr"><span class="kk">1/2/3</span><span class="kd">Form Small Set 1/2/3</span></div>
+  <div class="kbr"><span class="kk">R</span><span class="kd">Reveal Joker</span></div>
+  <div class="kbr"><span class="kk">X</span><span class="kd">Discard selected</span></div>
+  <div class="kbr"><span class="kk">S</span><span class="kd">Declare SHOW!</span></div>
+  <div class="kbr"><span class="kk">ESC</span><span class="kd">Deselect all</span></div>
+  <div class="kbr"><span class="kk">?</span><span class="kd">Toggle this guide</span></div>
+</div>
+
+<!-- TOASTS -->
+<div id="toasts"></div>
+
+<!-- CONNECTING -->
+<div id="mpconn">
+  <div class="spinner"></div>
+  <div id="mpconntxt" style="font-size:15px;font-weight:700;color:var(--gold);font-family:'Rajdhani',sans-serif;letter-spacing:1px;">Connecting…</div>
+  <div id="mpconnsub" style="font-size:11px;color:var(--dim);font-family:'Rajdhani',sans-serif;"></div>
+</div>
+
+<!-- RESULT -->
+<div id="resov"><div class="modal" id="resbody"></div></div>
+
+<!-- ════════════════════════════════
+     GAME ENGINE
+════════════════════════════════ -->
+<script>
+/* ═══ CONSTANTS ═══ */
+var RANKS=['A','2','3','4','5','6','7','8','9','10','J','Q','K'];
+var SUITS=['♠','♥','♦','♣'];
+var REDS=['♥','♦'];
+
+/* ═══ PLAYER IDENTITY ═══ */
+// Use sessionStorage for myId so each browser tab gets its own unique ID.
+// This prevents two tabs in the same browser from sharing the same player ID,
+// which would cause the host's "Start Game" button to stay disabled after joining.
+var myId=sessionStorage.getItem('jr_pid')||rndStr(8);
+sessionStorage.setItem('jr_pid',myId);
+var myCoins=parseInt(localStorage.getItem('jr_coins_'+myId))||1000;
+var myName='Player';
+function saveCoins(){localStorage.setItem('jr_coins_'+myId,myCoins);}
+function rndStr(n){var c='abcdefghijklmnopqrstuvwxyz0123456789',s='';for(var i=0;i<n;i++)s+=c[Math.floor(Math.random()*c.length)];return s;}
+function mkCode(){var c='ABCDEFGHJKLMNPQRSTUVWXYZ234567',s='';for(var i=0;i<6;i++)s+=c[Math.floor(Math.random()*c.length)];return s;}
+
+/* ═══ APP STATE ═══ */
+var appMode=null;
+
+/* ════════════════════════════════
+   FIREBASE MULTIPLAYER STATE
+════════════════════════════════ */
+var MP={
+  roomCode:null, isHost:false,
+  players:[],    // [{id,name,coins,wins,isHost}]
+  rounds:3, bet:100, round:1,
+  roomListener:null,  // Firebase listener off() handle
+  gameListener:null,
+  oppHandCount:13,
+  oppName:'Opponent'
+};
+
+/* ═══ LOCAL GAME STATE ═══ */
+var G={
+  hand:[], sets:{big:null,s1:null,s2:null,s3:null},
+  joker:null, jKnown:false, bigDone:false,
+  sel:[], drew:false, phase:'idle',
+  disc:[], drawCount:0, dlog:[],
+  _showProcessed:false,
+  // AI only
+  ai:{hand:[],sets:{big:null,s1:null,s2:null,s3:null},jKnown:false,coins:1000,wins:0},
+  _drawPile:[]
+};
+
+/* ═══ DECK ═══ */
+function mkDeck(){var d=[];for(var ri=0;ri<RANKS.length;ri++)for(var si=0;si<SUITS.length;si++)d.push({rank:RANKS[ri],suit:SUITS[si],id:RANKS[ri]+SUITS[si]});return d;}
+function shuffle(a){var b=a.slice();for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t;}return b;}
+function isRed(c){return REDS.indexOf(c.suit)>=0;}
+function arrVal(v){if(!v)return[];if(Array.isArray(v))return v;return Object.values(v);}
+
+/* ═══ SCREEN NAV ═══ */
+function go(name){
+  document.querySelectorAll('.scr').forEach(function(s){s.classList.remove('on');});
+  var el=document.getElementById('s-'+name);
+  if(el)el.classList.add('on');
+  document.getElementById('sg').style.display=(name==='game')?'flex':'none';
+  if(name==='lobby')refreshLobby();
+}
+
+/* ═══ MODE ═══ */
+function pickMode(m){
+  appMode=m;
+  if(m==='ai'){
+    var n=prompt('Enter your name:','Player');
+    myName=(n&&n.trim())?n.trim():'Player';
+    MP.rounds=3;MP.bet=100;MP.round=1;
+    MP.players=[{id:myId,name:myName,coins:myCoins,wins:0}];
+    G.ai.coins=1000;G.ai.wins=0;
+    go('game');
+    document.getElementById('oplbl').textContent='🤖 AI OPPONENT';
+    startAI();
+  } else {
+    go('room');
+  }
+}
+
+/* ════════════════════════════════
+   FIREBASE ROOM SYSTEM
+════════════════════════════════ */
+
+/* ── CREATE ROOM ── */
+async function createRoom(){
+  var nameVal=document.getElementById('pname').value.trim()||'Host';
+  myName=nameVal;
+  showConnecting('Creating Room…','Saving to Firebase Realtime Database…');
+  var code=mkCode();
+  try{
+    await db.ref('rooms/'+code).set({
+      host:myId, status:'waiting',
+      created:Date.now(),
+      rounds:3, bet:100, round:1,
+      players:{
+        [myId]:{id:myId,name:myName,coins:myCoins,wins:0,isHost:true}
+      }
+    });
+    MP.roomCode=code; MP.isHost=true;
+    MP.players=[{id:myId,name:myName,coins:myCoins,wins:0,isHost:true}];
+    MP.rounds=3; MP.bet=100; MP.round=1;
+    hideConnecting();
+    listenRoom(code);
+    go('lobby');
+    document.getElementById('lbnote').textContent='You are the host 👑';
+    document.getElementById('conn-status').textContent='✅ Room created! Waiting for players…';
+    document.getElementById('startbtn').disabled=true;
+    toast('Room Created: '+code,'tgreen');
+  }catch(err){
+    hideConnecting();
+    toast('Error: '+err.message,'tred');
+  }
+}
+
+/* ── JOIN ROOM ── */
+async function joinRoom(){
+  var nameVal=document.getElementById('pname').value.trim()||'Player';
+  var code=document.getElementById('jcode').value.trim().toUpperCase();
+  if(!code||code.length!==6){toast('Enter a valid 6-character room code!','tred');return;}
+  myName=nameVal;
+  showConnecting('Joining Room '+code+'…','Connecting via Firebase…');
+  try{
+    var snap=await db.ref('rooms/'+code).get();
+    if(!snap.exists()){
+      hideConnecting();
+      toast('Room not found! Check the code and try again.','tred');
+      return;
+    }
+    var roomData=snap.val();
+    if(roomData.status==='started'){
+      hideConnecting();
+      toast('Game already started in this room!','tred');
+      return;
+    }
+    await db.ref('rooms/'+code+'/players/'+myId).set({
+      id:myId,name:myName,coins:myCoins,wins:0,isHost:false
+    });
+    MP.roomCode=code; MP.isHost=false;
+    MP.rounds=roomData.rounds||3;
+    MP.bet=roomData.bet||100;
+    hideConnecting();
+    listenRoom(code);
+    go('lobby');
+    document.getElementById('lbnote').textContent='Waiting for host to start…';
+    document.getElementById('startbtn').disabled=true;
+    toast('Joined Room!','tgreen');
+  }catch(err){
+    hideConnecting();
+    toast('Error: '+err.message,'tred');
+  }
+}
+
+/* ── ROOM LISTENER ── */
+function listenRoom(code){
+  // Remove old listeners
+  if(MP.roomListener) db.ref('rooms/'+code).off('value',MP.roomListener);
+
+  MP.roomListener=db.ref('rooms/'+code).on('value',function(snap){
+    var data=snap.val();
+    if(!data) return;
+
+    // Update local room config
+    MP.players=Object.values(data.players||{});
+    MP.rounds=data.rounds||3;
+    MP.bet=data.bet||100;
+    MP.round=data.round||1;
+
+    // Refresh lobby UI if still in lobby
+    if(data.status==='waiting'){
+      refreshLobby();
+      var cs=document.getElementById('conn-status');
+      if(cs) cs.textContent='✅ '+MP.players.length+' player(s) connected';
+      var sb=document.getElementById('startbtn');
+      if(sb&&MP.isHost) sb.disabled=MP.players.length<2;
+      return;
+    }
+
+    // Game started — show game board and process game state
+    if(data.status==='started'&&data.game){
+      processFirebaseGame(data.game,data);
+    }
+
+    // Next round signal
+    if(data.status==='nextround'){
+      if(!G._nextRoundHandled){
+        G._nextRoundHandled=true;
+        setTimeout(function(){startMPRound(code);},500);
+      }
+    }
+  });
+}
+
+/* ── PROCESS FIREBASE GAME STATE ── */
+var _gameShown=false;
+function processFirebaseGame(game,roomData){
+  // Show game board first time
+  if(!_gameShown){
+    _gameShown=true;
+    var opp=MP.players.find(function(p){return p.id!==myId;})||{name:'Opponent'};
+    MP.oppName=opp.name;
+    document.getElementById('oplbl').textContent='👤 '+opp.name;
+    G.sets={big:null,s1:null,s2:null,s3:null};
+    G.sel=[];G.drew=false;G.jKnown=false;G.bigDone=false;G.dlog=[];G._showProcessed=false;
+    resetSlots();
+    go('game');
+    refreshRoundUI();
+    refreshScoreBar();
+    runDealer(function(){
+      loadMyHand(game);
+      updateTurnFromFirebase(game);
+      render();updateBtns();
+    });
+    return;
+  }
+
+  // Update public state
+  G.disc=arrVal(game.discard);
+  G.drawCount=arrVal(game.deck).length;
+  var oppId=getOppId();
+  if(oppId&&game.hands&&game.hands[oppId]){
+    MP.oppHandCount=arrVal(game.hands[oppId]).length;
+  }
+
+  // Update my hand from Firebase (authoritative)
+  if(game.hands&&game.hands[myId]){
+    var fbHand=arrVal(game.hands[myId]);
+    // Only update if not currently acting (to avoid flicker)
+    if(G.phase!=='action'){
+      G.hand=fbHand;
+    }
+  }
+
+  // Turn change
+  updateTurnFromFirebase(game);
+
+  // Big set announcements
+  if(game.bigSets){
+    var bss=typeof game.bigSets==='object'?game.bigSets:{};
+    Object.keys(bss).forEach(function(pid){
+      var bs=bss[pid];
+      if(pid!==myId&&!bs._notified){
+        toast('👑 '+getPlayerName(pid)+' formed Big Set! (4×'+bs.rank+')','tgold');
+        document.getElementById('opinfo').textContent='👑 Big Set ✓ ('+bs.rank+')';
+        db.ref('rooms/'+MP.roomCode+'/game/bigSets/'+pid+'/_notified').set(true);
+      }
+    });
+  }
+
+  // Joker reveal notifications
+  if(game.jokerReveals){
+    var jrs=game.jokerReveals;
+    Object.keys(jrs).forEach(function(pid){
+      if(pid!==myId&&!jrs[pid]._notified){
+        toast('🎭 '+getPlayerName(pid)+' revealed the Joker!','tgold');
+        db.ref('rooms/'+MP.roomCode+'/game/jokerReveals/'+pid+'/_notified').set(true);
+      }
+      // My joker reveal (set when I called actReveal)
+      if(pid===myId&&jrs[pid].granted&&!G.jKnown){
+        G.joker=game.joker;G.jKnown=true;
+        showJokerPriv(game.joker);
+        setChest(game.joker.rank+'=★');
+        robot('excited','Joker='+game.joker.rank+'! Wild! 🃏');
+      }
+    });
+  }
+
+  // Show result
+  if(game.showResult&&!G._showProcessed){
+    G._showProcessed=true;
+    var sr=game.showResult;
+    G.joker=sr.joker||G.joker;
+    setTimeout(function(){
+      doRevealAndResult(sr.pid,sr.joker,sr.doper,sr.sets,{ok:sr.valid,msg:sr.msg||''});
+    },400);
+  }
+
+  render();updateBtns();
+}
+
+function loadMyHand(game){
+  if(game&&game.hands&&game.hands[myId]){
+    G.hand=arrVal(game.hands[myId]);
+  }
+  if(game){
+    G.disc=arrVal(game.discard);
+    G.drawCount=arrVal(game.deck).length;
+    if(game.joker) G.joker=game.joker;
+  }
+}
+
+function updateTurnFromFirebase(game){
+  if(!game||!game.turn) return;
+  var isMyTurn=game.turn===myId;
+  if(isMyTurn&&G.phase==='opp'){
+    G.phase='draw';G.drew=false;
+    setTurnPill('you');setSt('Your turn! Draw a card.','sn');
+    robot('idle','Your turn! 🎴');
+  } else if(!isMyTurn&&(G.phase==='draw'||G.phase==='idle')){
+    G.phase='opp';
+    setTurnPill('opp');setSt(getPlayerName(game.turn)+"'s turn…",'si');
+    robot('thinking',"Opponent's turn…");
+  }
+}
+
+function getOppId(){
+  var opp=MP.players.find(function(p){return p.id!==myId;});
+  return opp?opp.id:null;
+}
+function getPlayerName(pid){
+  var p=MP.players.find(function(p){return p.id===pid;});
+  return p?p.name:'Player';
+}
+
+/* ── HOST STARTS GAME ── */
+async function hostStartGame(){
+  if(!MP.isHost||MP.players.length<2)return;
+  var deck=shuffle(mkDeck());
+  var joker=deck.pop();
+  var hands={};
+  MP.players.forEach(function(p){hands[p.id]=deck.splice(0,13);});
+  var firstTurn=MP.players[0].id;
+
+  try{
+    _gameShown=false;
+    G._nextRoundHandled=false;
+    await db.ref('rooms/'+MP.roomCode).update({
+      status:'started', round:1,
+      game:{
+        deck:deck, joker:joker,
+        discard:[], turn:firstTurn,
+        hands:hands,
+        bigSets:{}, jokerReveals:{},
+        showResult:null, nextRound:null
+      }
+    });
+  }catch(err){toast('Error starting: '+err.message,'tred');}
+}
+
+/* ── NEXT ROUND (MP) ── */
+async function startMPRound(code){
+  if(!MP.isHost) return;
+  var deck=shuffle(mkDeck());
+  var joker=deck.pop();
+  var hands={};
+  MP.players.forEach(function(p){hands[p.id]=deck.splice(0,13);});
+  var firstTurn=MP.players[0].id;
+  MP.round++;
+  _gameShown=false;
+  G._nextRoundHandled=false;
+  try{
+    await db.ref('rooms/'+MP.roomCode).update({
+      status:'started', round:MP.round,
+      game:{
+        deck:deck, joker:joker,
+        discard:[], turn:firstTurn,
+        hands:hands,
+        bigSets:{}, jokerReveals:{},
+        showResult:null, nextRound:null
+      }
+    });
+  }catch(e){}
+}
+
+/* ── SETTINGS (HOST ONLY) ── */
+function setRounds(n){
+  MP.rounds=n;
+  document.querySelectorAll('#ropts .opt').forEach(function(b){b.classList.toggle('sel',parseInt(b.getAttribute('data-v'))===n);});
+  if(appMode==='mp'&&MP.isHost&&MP.roomCode){
+    db.ref('rooms/'+MP.roomCode).update({rounds:n});
+  }
+}
+function setBet(n){
+  MP.bet=n;
+  document.querySelectorAll('#bopts .opt').forEach(function(b){b.classList.toggle('sel',parseInt(b.getAttribute('data-v'))===n);});
+  if(appMode==='mp'&&MP.isHost&&MP.roomCode){
+    db.ref('rooms/'+MP.roomCode).update({bet:n});
+  }
+}
+
+/* ── LOBBY UI ── */
+function refreshLobby(){
+  document.getElementById('lbcode').textContent=MP.roomCode||'——';
+  document.getElementById('lbcoins').textContent='💰 '+myCoins;
+  var pel=document.getElementById('lbplayers');pel.innerHTML='';
+  (MP.players||[]).forEach(function(p){
+    var d=document.createElement('div');d.className='pslot';
+    d.innerHTML='<div class="pdot '+(p.id===myId?'dg':'dy')+'"></div>'+
+      '<span style="font-size:12px;font-weight:600;">'+p.name+(p.isHost?' 👑':'')+'</span>'+
+      '<span class="pcoins">💰 '+p.coins+'</span>';
+    pel.appendChild(d);
+  });
+  document.getElementById('lbwait').style.display=(MP.players||[]).length<2?'block':'none';
+  document.querySelectorAll('#ropts .opt').forEach(function(b){
+    b.classList.toggle('sel',parseInt(b.getAttribute('data-v'))===MP.rounds);
+    b.disabled=(appMode==='mp'&&!MP.isHost);
+  });
+  document.querySelectorAll('#bopts .opt').forEach(function(b){
+    b.classList.toggle('sel',parseInt(b.getAttribute('data-v'))===MP.bet);
+    b.disabled=(appMode==='mp'&&!MP.isHost);
+  });
+}
+
+/* ── CONNECTING OVERLAY ── */
+function showConnecting(t,s){
+  document.getElementById('mpconntxt').textContent=t;
+  document.getElementById('mpconnsub').textContent=s;
+  document.getElementById('mpconn').classList.add('on');
+}
+function hideConnecting(){document.getElementById('mpconn').classList.remove('on');}
+
+/* ── LEAVE GAME ── */
+async function leaveGame(){
+  if(appMode==='mp'&&MP.roomCode){
+    try{
+      await db.ref('rooms/'+MP.roomCode+'/players/'+myId).remove();
+      if(MP.roomListener) db.ref('rooms/'+MP.roomCode).off('value',MP.roomListener);
+    }catch(e){}
+    MP.roomCode=null;
+  }
+  go('landing');
+}
+
+/* ════════════════════════════════
+   AI GAME
+════════════════════════════════ */
+function startAI(){
+  resetState();
+  runDealer(function(){
+    G.phase='draw';setChest('PLAY');robot('idle','Your turn! 🎴');
+    setTurnPill('you');setSt('Draw a card to start.','sn');
+    render();updateBtns();refreshRoundUI();refreshScoreBar();
+  });
+}
+
+/* ════════════════════════════════
+   STATE RESET
+════════════════════════════════ */
+function resetState(){
+  var dd=shuffle(mkDeck());
+  G.joker=dd.pop();G.hand=dd.splice(0,13);G.ai.hand=dd.splice(0,13);
+  G._drawPile=dd;G.disc=[];G.drawCount=dd.length;
+  G.sets={big:null,s1:null,s2:null,s3:null};
+  G.ai.sets={big:null,s1:null,s2:null,s3:null};
+  G.jKnown=false;G.bigDone=false;G.ai.jKnown=false;
+  G.sel=[];G.drew=false;G.phase='idle';G.dlog=[];G._showProcessed=false;
+  resetSlots();
+  var sj=document.getElementById('sjoker');sj.className='card fd nh';sj.innerHTML='';
+  document.getElementById('jlbl').textContent='🔒 HIDDEN';
+  document.getElementById('dopz').style.display='none';
+  document.getElementById('dlog').textContent='';
+  document.getElementById('opinfo').textContent='';
+}
+function resetSlots(){
+  ['big','s1','s2','s3'].forEach(function(k){
+    var el=document.getElementById('sl-'+k);if(el)el.classList.remove('done');
+  });
+}
+
+/* ════════════════════════════════
+   DEALER ANIMATION
+════════════════════════════════ */
+function runDealer(cb){
+  var ov=document.getElementById('dealov');
+  ov.style.display='flex';
+  var sp=document.getElementById('dealsp');
+  var bar=document.getElementById('dealbar');
+  var wrap=document.getElementById('dealwrap');
+  var bot=document.getElementById('dealbot');
+  bar.style.width='0%';wrap.style.transform='';wrap.style.opacity='';wrap.style.transition='';
+  bot.className='rd';
+  document.getElementById('dal').style.animation='';
+  document.getElementById('dar').style.animation='';
+  sp.textContent='🃏 Shuffling the deck…';
+  setTimeout(function(){
+    sp.textContent='📤 Dealing cards to players…';
+    document.getElementById('dal').style.animation='awl .35s ease-in-out infinite';
+    document.getElementById('dar').style.animation='awr .35s ease-in-out .175s infinite';
+    var cx=window.innerWidth/2,cy=window.innerHeight/2-50;
+    var pRect=document.getElementById('phnd').getBoundingClientRect();
+    var aRect=document.getElementById('ophnd').getBoundingClientRect();
+    var pX=pRect.left+pRect.width/2,pY=pRect.top+pRect.height/2;
+    var aX=aRect.left+aRect.width/2,aY=aRect.top+aRect.height/2;
+    var total=26,idx=0;
+    function nxt(){
+      if(idx>=total){
+        document.getElementById('dal').style.animation='';
+        document.getElementById('dar').style.animation='';
+        sp.textContent='🎉 Good luck everyone!';
+        bar.style.width='100%';
+        bot.className='rb';
+        document.getElementById('dbmo').setAttribute('d','M 42 70 Q 70 86 98 70');
+        setTimeout(function(){
+          wrap.style.transition='transform .6s cubic-bezier(.4,0,1,1),opacity .55s';
+          wrap.style.transform='translateY(-130px) scale(0.2)';
+          wrap.style.opacity='0';
+          setTimeout(function(){
+            ov.style.display='none';
+            wrap.style.transform='';wrap.style.opacity='';wrap.style.transition='';
+            bot.className='rd';
+            document.getElementById('dbmo').setAttribute('d','M 47 72 Q 70 82 93 72');
+            if(cb)cb();
+          },640);
+        },750);
+        return;
+      }
+      var toP=(idx%2===0);
+      flyCard(cx,cy,toP?pX:aX,toP?pY:aY,idx);
+      bar.style.width=((idx+1)/total*100)+'%';
+      idx++;setTimeout(nxt,72);
+    }
+    setTimeout(nxt,350);
+  },650);
+}
+function flyCard(fx,fy,tx,ty,idx){
+  var fc=document.createElement('div');fc.className='flyc';
+  fc.style.cssText='left:'+fx+'px;top:'+fy+'px;transform:translate(-50%,-50%);transition:all .34s cubic-bezier(.22,.61,.36,1);opacity:1;';
+  document.getElementById('flycards').appendChild(fc);
+  setTimeout(function(){
+    fc.style.left=tx+'px';fc.style.top=ty+'px';fc.style.opacity='0.5';
+    fc.style.transform='translate(-50%,-50%) scale(0.75) rotate('+(idx%3===0?10:-10)+'deg)';
+    setTimeout(function(){fc.remove();},360);
+  },20);
+}
+
+/* ════════════════════════════════
+   PLAYER ACTIONS
+════════════════════════════════ */
+function actDraw(){
+  if(G.phase!=='draw'||G.drew)return;
+  if(appMode==='ai'){
+    if(!G._drawPile.length)return;
+    var c=G._drawPile.pop();
+    G.hand.push(c);G.drew=true;G.phase='action';G.drawCount=G._drawPile.length;
+    robot('thinking','Drew '+c.rank+c.suit+'!');setSt('Drew '+c.rank+c.suit+'. Discard or form sets.','sn');
+    render();updateBtns();
+  } else {
+    // Firebase: transaction to pop card from deck and add to hand
+    db.ref('rooms/'+MP.roomCode+'/game').transaction(function(game){
+      if(!game||!game.deck)return game;
+      var deck=arrVal(game.deck);
+      if(!deck.length)return game; // abort
+      var card=deck.splice(deck.length-1,1)[0];
+      var hand=arrVal(game.hands&&game.hands[myId]?game.hands[myId]:[]);
+      hand.push(card);
+      game.deck=deck;
+      if(!game.hands)game.hands={};
+      game.hands[myId]=hand;
+      return game;
+    },function(err,committed,snap){
+      if(err){toast('Draw failed!','tred');return;}
+      if(committed&&snap.val()){
+        var game=snap.val();
+        G.hand=arrVal(game.hands&&game.hands[myId]?game.hands[myId]:[]);
+        G.drawCount=arrVal(game.deck).length;
+        G.drew=true;G.phase='action';
+        var nc=G.hand[G.hand.length-1];
+        if(nc){robot('thinking','Drew '+nc.rank+nc.suit+'!');setSt('Drew '+nc.rank+nc.suit+'. Discard or form sets.','sn');}
+        render();updateBtns();
+      }
+    });
+  }
+}
+
+function actPick(){
+  if(G.phase!=='draw'||G.drew||!G.disc.length)return;
+  if(appMode==='ai'){
+    var c2=G.disc.pop();
+    G.hand.push(c2);G.drew=true;G.phase='action';
+    robot('thinking','Picked '+c2.rank+c2.suit+'!');setSt('Picked. Discard a card.','sn');
+    render();updateBtns();
+  } else {
+    db.ref('rooms/'+MP.roomCode+'/game').transaction(function(game){
+      if(!game||!game.discard)return game;
+      var disc=arrVal(game.discard);
+      if(!disc.length)return game;
+      var card=disc.splice(disc.length-1,1)[0];
+      var hand=arrVal(game.hands&&game.hands[myId]?game.hands[myId]:[]);
+      hand.push(card);
+      game.discard=disc;
+      if(!game.hands)game.hands={};
+      game.hands[myId]=hand;
+      return game;
+    },function(err,committed,snap){
+      if(err){toast('Pick failed!','tred');return;}
+      if(committed&&snap.val()){
+        var game=snap.val();
+        G.hand=arrVal(game.hands&&game.hands[myId]?game.hands[myId]:[]);
+        G.disc=arrVal(game.discard);
+        G.drew=true;G.phase='action';
+        var nc=G.hand[G.hand.length-1];
+        if(nc){robot('thinking','Picked '+nc.rank+nc.suit+'!');setSt('Picked. Discard a card.','sn');}
+        render();updateBtns();
+      }
+    });
+  }
+}
+
+function toggleCard(id){
+  if(G.phase!=='action')return;
+  var i=G.sel.indexOf(id);if(i<0)G.sel.push(id);else G.sel.splice(i,1);
+  render();updateBtns();
+}
+function getSel(){return G.hand.filter(function(c){return G.sel.indexOf(c.id)>=0;});}
+function validSmall(cards,jr){
+  if(cards.length!==3)return false;
+  if(!jr){var r0=cards[0].rank;return cards.every(function(c){return c.rank===r0;});}
+  var nat=cards.filter(function(c){return c.rank!==jr;});
+  if(!nat.length)return false;
+  var nr=nat[0].rank;return nat.every(function(c){return c.rank===nr;});
+}
+
+function actBig(){
+  if(G.sets.big){setSt('Big Set already formed!','se');return;}
+  var sel=getSel();
+  if(sel.length!==4){setSt('Select exactly 4 cards!','se');robot('rw','Need 4!');return;}
+  var rk=sel[0].rank;
+  if(!sel.every(function(c){return c.rank===rk;})){setSt('All 4 must be same rank!','se');robot('rw','Same rank!');return;}
+  G.sets.big={cards:sel,rank:rk};
+  G.hand=G.hand.filter(function(c){return G.sel.indexOf(c.id)<0;});
+  G.sel=[];
+  document.getElementById('sl-big').classList.add('done');
+  robot('excited','4×'+rk+' Big Set! Reveal the Joker! 🎉');
+  setSt('👑 Big Set (4×'+rk+') done! Click Reveal Joker!','ss');
+  if(appMode==='mp'&&MP.roomCode){
+    db.ref('rooms/'+MP.roomCode+'/game/bigSets/'+myId).set({rank:rk,pid:myId,name:myName});
+    // Also update hand in Firebase (removed 4 cards)
+    db.ref('rooms/'+MP.roomCode+'/game/hands/'+myId).set(G.hand);
+  }
+  render();updateBtns();
+}
+
+function actSmall(n){
+  var key='s'+n;
+  if(G.sets[key]){setSt('Small Set '+n+' already formed!','se');return;}
+  var sel=getSel();
+  if(sel.length!==3){setSt('Select exactly 3 cards!','se');robot('rw','Need 3!');return;}
+  var jr=G.jKnown?G.joker.rank:null;
+  if(!validSmall(sel,jr)){setSt('Invalid combo! Same rank (Jokers = Wild).','se');robot('rw','Invalid!');return;}
+  G.sets[key]={cards:sel};
+  G.hand=G.hand.filter(function(c){return G.sel.indexOf(c.id)<0;});
+  G.sel=[];
+  document.getElementById('sl-s'+n).classList.add('done');
+  robot('excited','Small Set '+n+' done! 🙌');setSt('Small Set '+n+' ✅','ss');
+  if(appMode==='mp'&&MP.roomCode){
+    db.ref('rooms/'+MP.roomCode+'/game/hands/'+myId).set(G.hand);
+  }
+  render();updateBtns();
+}
+
+function actReveal(){
+  if(!G.sets.big){setSt('Complete Big Set first!','se');return;}
+  if(G.jKnown){setSt('Already revealed!','si');return;}
+  if(appMode==='ai'){
+    G.jKnown=true;G.bigDone=true;
+    var jj=G.joker;
+    if(G.sets.big.rank===jj.rank){
+      G.hand=G.hand.concat(G.sets.big.cards);G.sets.big=null;
+      document.getElementById('sl-big').classList.remove('done');
+      G.jKnown=false;G.bigDone=false;
+      robot('rw','Big Set had Joker rank! Rebuild!');
+      setSt('⚠️ Big Set used Joker rank ('+jj.rank+')! Cleared!','se');return;
+    }
+    showJokerPriv(jj);setChest(jj.rank+'=★');robot('excited','Joker='+jj.rank+'! Wild! 🃏');
+    render();updateBtns();
+  } else {
+    // Firebase: write joker reveal request — Firebase listener will respond
+    db.ref('rooms/'+MP.roomCode+'/game/jokerReveals/'+myId).set({
+      pid:myId,name:myName,granted:true,ts:Date.now()
+    });
+    // Read joker from Firebase and show to self
+    db.ref('rooms/'+MP.roomCode+'/game/joker').get().then(function(snap){
+      var jk=snap.val();
+      if(!jk)return;
+      if(G.sets.big&&G.sets.big.rank===jk.rank){
+        G.hand=G.hand.concat(G.sets.big.cards);G.sets.big=null;
+        document.getElementById('sl-big').classList.remove('done');
+        setSt('⚠️ Big Set used Joker rank ('+jk.rank+')! Cleared!','se');
+        robot('rw','Big Set had Joker rank! Rebuild!');
+        db.ref('rooms/'+MP.roomCode+'/game/jokerReveals/'+myId).remove();
+        db.ref('rooms/'+MP.roomCode+'/game/hands/'+myId).set(G.hand);
+        render();updateBtns();return;
+      }
+      G.joker=jk;G.jKnown=true;
+      showJokerPriv(jk);setChest(jk.rank+'=★');robot('excited','Joker='+jk.rank+'! Wild! 🃏');
+      render();updateBtns();
+    });
+  }
+}
+
+function showJokerPriv(j){
+  var ov=document.getElementById('jpriv');
+  var wrap=document.getElementById('jpcard');wrap.innerHTML='';
+  var el=mkCard(j,false,'clg');el.classList.add('popin','nh');el.style.cursor='default';
+  wrap.appendChild(el);
+  document.getElementById('jpsub').textContent='All '+j.rank+'s are your Wild Cards for Small Sets!';
+  ov.style.display='flex';burst(16);
+}
+function closeJp(){
+  document.getElementById('jpriv').style.display='none';
+  setSt('🎭 Joker='+G.joker.rank+'. Wild cards highlighted! Complete Small Sets!','si');
+}
+
+function actDiscard(){
+  if(!G.drew){setSt('Draw a card first!','se');return;}
+  if(G.sel.length!==1){setSt('Select exactly 1 card to discard!','se');return;}
+  var id=G.sel[0];
+  var idx=G.hand.findIndex?G.hand.findIndex(function(c){return c.id===id;}):findIdx(G.hand,id);
+  if(idx<0)return;
+  var card=G.hand.splice(idx,1)[0];
+  G.sel=[];
+  if(appMode==='ai'){
+    G.disc.push(card);G.drew=false;G.phase='ai';
+    setTurnPill('ai');robot('thinking','AI thinking… 🤔');setSt("AI's turn…",'sn');
+    render();updateBtns();
+    setTimeout(aiTurn,900+Math.floor(Math.random()*600));
+  } else {
+    // Firebase: update discard + hand + turn
+    G.drew=false;G.phase='opp';
+    var nextPid=getOppId()||myId;
+    var newDisc=G.disc.concat([card]);
+    var updates={};
+    updates['game/discard']=newDisc;
+    updates['game/hands/'+myId]=G.hand;
+    updates['game/turn']=nextPid;
+    db.ref('rooms/'+MP.roomCode).update(updates).then(function(){
+      G.disc=newDisc;
+      G.dlog.push({n:myName,c:card});updateDlog();
+      toast('🗑 You discarded '+card.rank+card.suit,'tblue');
+      setTurnPill('opp');setSt(getPlayerName(nextPid)+"'s turn…",'si');
+      render();updateBtns();
+    }).catch(function(e){toast('Discard error: '+e.message,'tred');});
+  }
+}
+function findIdx(arr,id){for(var i=0;i<arr.length;i++)if(arr[i].id===id)return i;return -1;}
+
+function clearSet(key){
+  if(!G.sets[key])return;
+  G.hand=G.hand.concat(G.sets[key].cards);
+  G.sets[key]=null;G.sel=[];
+  document.getElementById('sl-'+key).classList.remove('done');
+  if(appMode==='mp'&&MP.roomCode){
+    db.ref('rooms/'+MP.roomCode+'/game/hands/'+myId).set(G.hand);
+    if(key==='big') db.ref('rooms/'+MP.roomCode+'/game/bigSets/'+myId).remove();
+  }
+  render();updateBtns();
+}
+
+function actShow(){
+  var s=G.sets;
+  if(!s.big||!s.s1||!s.s2||!s.s3){setSt('Complete all 4 sets first!','se');return;}
+  if(G.hand.length!==1||!G.drew){setSt('Draw your final card first — it becomes the Doper!','se');return;}
+  var doper=G.hand.pop();G.sel=[];G.phase='validating';
+  setSt('⚡ SHOW declared! Validating…','ss');robot('excited','SHOW! 🎉');
+  if(appMode==='ai'){
+    G.disc.push(doper);
+    setTimeout(function(){doAIValidate(doper,G.sets);},700);
+    render();
+  } else {
+    // Write show result to Firebase — everyone sees it
+    db.ref('rooms/'+MP.roomCode+'/game/joker').get().then(function(snap){
+      var joker=snap.val()||G.joker;
+      var res=validateSets(G.sets,joker.rank);
+      db.ref('rooms/'+MP.roomCode+'/game/showResult').set({
+        pid:myId,name:myName,joker:joker,
+        doper:doper,sets:G.sets,valid:res.ok,msg:res.msg||'',
+        ts:Date.now()
+      }).then(function(){
+        render();
+      });
+    });
+  }
+}
+
+/* ════════════════════════════════
+   VALIDATION & RESULTS
+════════════════════════════════ */
+function validateSets(sets,jr){
+  var big=sets.big,s1=sets.s1,s2=sets.s2,s3=sets.s3;
+  if(!big||!s1||!s2||!s3)return{ok:false,msg:'Not all sets complete'};
+  if(!big.cards||big.cards.length!==4)return{ok:false,msg:'Big Set needs 4 cards'};
+  var br=big.cards[0].rank;
+  if(!big.cards.every(function(c){return c.rank===br;}))return{ok:false,msg:'Big Set cards not all same rank'};
+  if(br===jr)return{ok:false,msg:'Big Set used Joker rank!'};
+  var ss=[['S1',s1],['S2',s2],['S3',s3]];
+  for(var i=0;i<ss.length;i++)if(!validSmall(ss[i][1].cards,jr))return{ok:false,msg:ss[i][0]+': invalid combo'};
+  return{ok:true};
+}
+
+function doAIValidate(doper,sets){
+  var j=G.joker;
+  showJokerOnTable(j);
+  showDoper(doper);
+  var res=validateSets(sets,j.rank);
+  var youWon=res.ok;
+  applyCoins(youWon);
+  if(youWon){robot('excited','YOU WIN! 🏆');burst(46);}else{robot('sad','AI wins! 😔');}
+  showResult(youWon,res,j,doper,MP.round>=MP.rounds);
+}
+
+function doRevealAndResult(pid,joker,doper,sets,res){
+  showJokerOnTable(joker||G.joker);
+  if(doper)showDoper(doper);
+  var youWon=(pid===myId)?res.ok:!res.ok;
+  applyCoinsMP(youWon,pid);
+  if(youWon){robot('excited','YOU WIN! 🏆');burst(46);}else{robot('sad','Opponent wins! 😔');}
+  showResult(youWon,res,joker||G.joker,doper,MP.round>=MP.rounds);
+}
+
+function showJokerOnTable(j){
+  if(!j)return;
+  var jEl=document.getElementById('sjoker');
+  jEl.className='card nh '+(isRed(j)?'r':'b');jEl.innerHTML=cHTML(j);jEl.classList.add('popin');
+  document.getElementById('jlbl').textContent='🃏 '+j.rank;
+}
+function showDoper(doper){
+  document.getElementById('dopz').style.display='flex';
+  var dw=document.getElementById('dopwrap');dw.innerHTML='';
+  var de=mkCard(doper,false,'normal');de.classList.add('dop','nh');de.style.cursor='default';dw.appendChild(de);
+}
+
+function applyCoins(youWon){
+  var bet=MP.bet;
+  if(youWon){myCoins+=bet;saveCoins();G.ai.coins=Math.max(0,G.ai.coins-bet);}
+  else{myCoins=Math.max(0,myCoins-bet);saveCoins();G.ai.coins+=bet;G.ai.wins++;}
+  var me=MP.players.find(function(p){return p.id===myId;});
+  if(me&&youWon)me.wins=(me.wins||0)+1;
+  // Save coins to Firebase
+  db.ref('rooms/'+(MP.roomCode||'_')+'/players/'+myId+'/coins').set(myCoins).catch(function(){});
+}
+function applyCoinsMP(youWon,winnerPid){
+  var bet=MP.bet;
+  if(youWon){myCoins+=bet;}else{myCoins=Math.max(0,myCoins-bet);}
+  saveCoins();
+  var me=MP.players.find(function(p){return p.id===myId;});
+  if(me&&youWon)me.wins=(me.wins||0)+1;
+  else if(me&&!youWon&&winnerPid!==myId){}
+  if(MP.roomCode) db.ref('rooms/'+MP.roomCode+'/players/'+myId+'/coins').set(myCoins).catch(function(){});
+}
+
+function showResult(youWon,res,joker,doper,isFinal){
+  var col=youWon?'var(--gold)':'var(--red)';
+  var myWins=((MP.players.find(function(p){return p.id===myId;})||{}).wins)||0;
+  var oppWins=G.ai.wins||0;
+  var html='<h2 style="color:'+col+'">'+(youWon?'🏆 YOU WIN!':'💔 You Lose!')+'</h2>';
+  if(!res.ok)html+='<p style="color:var(--red);font-size:11px;margin-bottom:7px;">❌ '+(res.msg||'')+'</p>';
+  html+='<div class="cdelta '+(youWon?'cpos':'cneg')+'">'+(youWon?'+':'-')+MP.bet+' 💰</div>';
+  html+='<div class="rstats">'+
+    '🎭 <strong>Secret Joker:</strong> '+(joker?joker.rank+joker.suit:'?')+'<br>'+
+    '🔄 <strong>Doper:</strong> '+(doper?doper.rank+doper.suit:'—')+' (Reverse Flipped!)<br>'+
+    '👑 <strong>Big Set:</strong> '+(G.sets.big?'4×'+G.sets.big.rank:'—')+'<br>'+
+    '💰 <strong>Your Coins:</strong> '+myCoins+'<br>'+
+    '🏅 <strong>Round:</strong> '+MP.round+'/'+MP.rounds+'</div>';
+  if(isFinal){
+    html+='<div class="fgrid">'+
+      '<div class="fcard"><div class="fn">YOU</div><div class="fc">💰 '+myCoins+'</div><div class="fw">🏅 '+myWins+' wins</div></div>'+
+      '<div class="fcard"><div class="fn">'+(appMode==='ai'?'AI':MP.oppName)+'</div><div class="fc">💰 '+G.ai.coins+'</div><div class="fw">🏅 '+oppWins+' wins</div></div></div>';
+    var winner=myWins>oppWins?'🏆 YOU WIN THE MATCH!':myWins===oppWins?'🤝 IT\'S A DRAW!':'💔 OPPONENT WINS!';
+    html+='<div style="font-size:18px;font-weight:900;color:'+(myWins>=oppWins?'var(--gold)':'var(--red)')+';margin-bottom:12px;">'+winner+'</div>';
+    html+='<button class="btn bgold" onclick="playAgain()" style="width:100%;justify-content:center;padding:11px;font-size:14px;">🎴 Play Again</button>';
+  } else {
+    html+='<button class="btn bgold" onclick="nextRound()" style="width:100%;justify-content:center;padding:11px;font-size:14px;">▶ Next Round ('+(MP.round+1)+'/'+MP.rounds+')</button>';
+  }
+  document.getElementById('resbody').innerHTML=html;
+  document.getElementById('resov').classList.add('on');
+}
+
+function nextRound(){
+  document.getElementById('resov').classList.remove('on');
+  MP.round++;
+  robot('rc','Cleaning table! 🧹');setChest('INIT');
+  if(appMode==='ai'){
+    setTimeout(function(){
+      resetState();runDealer(function(){G.phase='draw';robot('idle','Draw! 🎴');
+        setTurnPill('you');setSt('New round! Draw a card.','sn');
+        render();updateBtns();refreshRoundUI();refreshScoreBar();});
+    },700);
+  } else {
+    // Signal next round via Firebase (host only starts it)
+    if(MP.roomCode){
+      db.ref('rooms/'+MP.roomCode).update({status:'nextround'}).catch(function(){});
+      G._nextRoundHandled=false;
+      _gameShown=false;
+      if(MP.isHost){
+        setTimeout(function(){startMPRound(MP.roomCode);},1000);
+      }
+    }
+  }
+}
+function playAgain(){
+  document.getElementById('resov').classList.remove('on');
+  MP.round=1;G.ai.wins=0;
+  MP.players.forEach(function(p){p.wins=0;});
+  if(appMode==='ai'){startAI();}
+  else if(MP.isHost){_gameShown=false;G._nextRoundHandled=false;hostStartGame();}
+}
+
+/* ════════════════════════════════
+   AI LOGIC
+════════════════════════════════ */
+function aiTurn(){
+  if(G.phase!=='ai')return;
+  var drawn;
+  if(G.disc.length&&G._drawPile.length){
+    var top=G.disc[G.disc.length-1];
+    var match=G.ai.hand.filter(function(c){return c.rank===top.rank;}).length;
+    drawn=(match>=2)?G.disc.pop():G._drawPile.pop();
+  } else if(G._drawPile.length){drawn=G._drawPile.pop();}
+  else{G.phase='draw';setTurnPill('you');render();updateBtns();return;}
+  G.ai.hand.push(drawn);G.drawCount=G._drawPile.length;
+  aiOrganize();
+  if(G.ai.sets.big&&!G.ai.jKnown){G.ai.jKnown=true;toast('🎭 AI revealed the Joker!','tgold');}
+  if(G.ai.sets.big&&G.ai.sets.s1&&G.ai.sets.s2&&G.ai.sets.s3){
+    var doper=G.ai.hand.length?G.ai.hand.pop():null;
+    if(doper)G.disc.push(doper);
+    setTimeout(function(){setSt('🤖 AI declares SHOW!','se');robot('excited','AI SHOW! 😱');
+      G.phase='validating';setTimeout(function(){doAIValidate(doper,G.ai.sets);},700);render();},500);
+    return;
+  }
+  var wi=aiWorst();
+  if(wi>=0){var dc=G.ai.hand.splice(wi,1)[0];G.disc.push(dc);G.dlog.push({n:'AI',c:dc});updateDlog();}
+  G.phase='draw';G.drew=false;G.drawCount=G._drawPile.length;
+  setTurnPill('you');robot('idle','Your turn! 🎴');setSt('Your turn! Draw a card.','sn');
+  render();updateBtns();
+}
+function aiOrganize(){
+  var jr=G.joker.rank;
+  function bm(h){var m={};h.forEach(function(c){if(!m[c.rank])m[c.rank]=[];m[c.rank].push(c);});return m;}
+  if(!G.ai.sets.big){var m0=bm(G.ai.hand);for(var rk in m0){if(rk!==jr&&m0[rk].length>=4){G.ai.sets.big={cards:m0[rk].slice(0,4),rank:rk};var ids=m0[rk].slice(0,4).map(function(c){return c.id;});G.ai.hand=G.ai.hand.filter(function(c){return ids.indexOf(c.id)<0;});break;}}}
+  ['s1','s2','s3'].forEach(function(key){
+    if(G.ai.sets[key])return;
+    var m=bm(G.ai.hand);var done=false;
+    for(var r in m){if(r===jr)continue;if(m[r].length>=3){G.ai.sets[key]={cards:m[r].slice(0,3)};var ids=m[r].slice(0,3).map(function(c){return c.id;});G.ai.hand=G.ai.hand.filter(function(c){return ids.indexOf(c.id)<0;});done=true;break;}}
+    if(done)return;
+    if(G.ai.jKnown){var m2=bm(G.ai.hand);var wilds=m2[jr]||[];for(var r2 in m2){if(r2===jr)continue;var need=3-m2[r2].length;if(need>0&&wilds.length>=need){var sc=m2[r2].slice(0,Math.min(3,m2[r2].length)).concat(wilds.slice(0,need));if(sc.length===3){G.ai.sets[key]={cards:sc};var ids2=sc.map(function(c){return c.id;});G.ai.hand=G.ai.hand.filter(function(c){return ids2.indexOf(c.id)<0;});break;}}}}
+  });
+}
+function aiWorst(){
+  if(!G.ai.hand.length)return -1;
+  var wi=0,ws=Infinity;
+  for(var i=0;i<G.ai.hand.length;i++){var cnt=G.ai.hand.filter(function(c){return c.rank===G.ai.hand[i].rank;}).length;if(cnt<ws){ws=cnt;wi=i;}}
+  return wi;
+}
+
+/* ════════════════════════════════
+   RENDERING
+════════════════════════════════ */
+function cHTML(c){return '<div class="ct"><span>'+c.rank+'</span><span>'+c.suit+'</span></div><div class="cm">'+c.suit+'</div><div class="cb"><span>'+c.rank+'</span><span>'+c.suit+'</span></div>';}
+function mkCard(c,fd,size){
+  var el=document.createElement('div');
+  if(fd){el.className='card fd';return el;}
+  var cls='card '+(isRed(c)?'r':'b')+(size&&size!=='normal'?' '+size:'');
+  el.className=cls;el.innerHTML=cHTML(c);return el;
+}
+function render(){renderHand();renderOpp();renderSets();renderDiscard();renderDraw();}
+function renderHand(){
+  var el=document.getElementById('phnd');el.innerHTML='';
+  var jr=G.jKnown?G.joker.rank:null;
+  G.hand.forEach(function(c){
+    var d=mkCard(c,false,'normal');
+    if(G.sel.indexOf(c.id)>=0)d.classList.add('sel');
+    if(jr&&c.rank===jr)d.classList.add('wild');
+    if(G.phase==='action'){(function(cid){d.onclick=function(){toggleCard(cid);};})(c.id);}
+    else d.style.cursor='default';
+    el.appendChild(d);
+  });
+  document.getElementById('hcnt').textContent='('+G.hand.length+')';
+}
+function renderOpp(){
+  var el=document.getElementById('ophnd');el.innerHTML='';
+  var cnt=appMode==='ai'?G.ai.hand.length:MP.oppHandCount;
+  for(var i=0;i<cnt;i++){var d=document.createElement('div');d.className='card fd cmi nh';d.style.cursor='default';el.appendChild(d);}
+  if(appMode==='ai'){
+    var p=[];
+    if(G.ai.sets.big)p.push('👑4×'+G.ai.sets.big.rank);
+    if(G.ai.sets.s1)p.push('S1✓');if(G.ai.sets.s2)p.push('S2✓');if(G.ai.sets.s3)p.push('S3✓');
+    if(G.ai.jKnown)p.push('🎭Known');
+    document.getElementById('opinfo').textContent=p.length?p.join(' | '):'Hand: '+G.ai.hand.length;
+  }
+}
+function renderSets(){
+  var bc=document.getElementById('bigcards');bc.innerHTML='';
+  var clrb=document.getElementById('clrbig');
+  if(G.sets.big){
+    G.sets.big.cards.forEach(function(c){var d=mkCard(c,false,'csm');d.classList.add('ins','nh');d.style.cursor='default';bc.appendChild(d);});
+    clrb.style.display='inline-flex';
+  } else {
+    for(var i=0;i<4;i++){var s=document.createElement('div');s.className='sle sleg';bc.appendChild(s);}
+    clrb.style.display='none';
+  }
+  var jr=G.jKnown?G.joker.rank:null;
+  [1,2,3].forEach(function(n){
+    var key='s'+n,ce=document.getElementById(key+'cards'),cb2=document.getElementById('clr'+key);
+    ce.innerHTML='';
+    if(G.sets[key]){
+      G.sets[key].cards.forEach(function(c){var d=mkCard(c,false,'csm');d.classList.add('ins','nh');d.style.cursor='default';if(jr&&c.rank===jr)d.classList.add('wild');ce.appendChild(d);});
+      cb2.style.display='inline-flex';
+    } else {
+      for(var i=0;i<3;i++){var s2=document.createElement('div');s2.className='sle';ce.appendChild(s2);}
+      cb2.style.display='none';
+    }
+  });
+}
+function renderDiscard(){
+  var el=document.getElementById('disctop');el.innerHTML='';
+  if(G.disc.length){
+    var top=G.disc[G.disc.length-1];
+    var d=mkCard(top,false,'normal');d.onclick=actPick;el.appendChild(d);
+  } else {
+    var e=document.createElement('div');e.className='pempty';el.appendChild(e);
+  }
+}
+function renderDraw(){document.getElementById('drawcnt').textContent=(G.drawCount||0)+' cards';}
+
+/* ════════════════════════════════
+   UI HELPERS
+════════════════════════════════ */
+function updateBtns(){
+  var isAct=G.phase==='action',isDrw=G.phase==='draw';
+  var sel=getSel(),jr=G.jKnown?G.joker.rank:null,s=G.sets;
+  var hasDraw=appMode==='ai'?(G._drawPile&&G._drawPile.length>0):(G.drawCount>0);
+  $('bdr').disabled=!(isDrw&&!G.drew&&hasDraw);
+  $('bpk').disabled=!(isDrw&&!G.drew&&G.disc.length>0);
+  $('bdc').disabled=!(isAct&&sel.length===1);
+  var canBig=isAct&&sel.length===4&&!s.big&&sel.every(function(c){return c.rank===sel[0].rank;});
+  $('bbg').disabled=!canBig;
+  var canSm=isAct&&sel.length===3&&validSmall(sel,jr);
+  $('bs1').disabled=!(canSm&&!s.s1);$('bs2').disabled=!(canSm&&!s.s2);$('bs3').disabled=!(canSm&&!s.s3);
+  $('btnrev').disabled=!(s.big&&!G.jKnown);
+  var canShow=isAct&&s.big&&s.s1&&s.s2&&s.s3&&G.hand.length===1&&G.drew;
+  $('bsh').disabled=!canShow;
+}
+function $(id){return document.getElementById(id);}
+function setSt(msg,cls){var el=document.getElementById('stxt');el.textContent=msg;el.className=cls||'sn';}
+function setTurnPill(who){
+  var el=document.getElementById('tpill');
+  if(who==='you'){el.className='tyou';el.textContent='YOUR TURN';}
+  else if(who==='ai'){el.className='tai';el.textContent='AI TURN';}
+  else{el.className='twait';el.textContent='OPPONENT';}
+}
+function refreshRoundUI(){
+  document.getElementById('rpill').textContent='Round '+MP.round+'/'+MP.rounds;
+  refreshScoreBar();
+}
+function refreshScoreBar(){
+  var mw=((MP.players.find(function(p){return p.id===myId;})||{}).wins)||0;
+  var aw=G.ai.wins||0;
+  var olab=appMode==='ai'?'AI':(MP.oppName||'OPP');
+  document.getElementById('scorechips').innerHTML=
+    '<div class="chip">YOU <span class="cg">💰'+myCoins+'</span> <span class="cc">🏅'+mw+'</span></div>'+
+    '<div class="chip">'+olab+' <span class="cg">💰'+G.ai.coins+'</span> <span class="cc">🏅'+aw+'</span></div>';
+}
+function updateDlog(){
+  var last=G.dlog.slice(-3);
+  document.getElementById('dlog').textContent=last.map(function(l){return l.n+': '+l.c.rank+l.c.suit;}).join(' · ');
+}
+
+/* ════════════════════════════════
+   ROBOT
+════════════════════════════════ */
+var MS='M 36 61 Q 55 70 74 61',MB='M 32 59 Q 55 74 78 59',MN='M 39 63 Q 55 61 71 63',MF='M 38 66 Q 55 56 72 66';
+function robot(state,speech){
+  var svg=$('rsvg');svg.className='';
+  var mo=$('rmo'),al=$('arl'),ar=$('arr');
+  var l1=$('ld1'),l2=$('ld2'),l3=$('ld3');
+  al.style.animation='';ar.style.animation='';
+  l1.style.animation='';l2.style.animation='';l3.style.animation='';
+  switch(state){
+    case'idle':svg.className='rf';mo.setAttribute('d',MS);$('ant').setAttribute('fill','var(--gold)');l1.setAttribute('fill','#ef4444');l2.setAttribute('fill','#22c55e');l3.setAttribute('fill','#f59e0b');break;
+    case'thinking':svg.className='rf';mo.setAttribute('d',MN);$('ant').setAttribute('fill','#60a5fa');l1.setAttribute('fill','#f59e0b');l2.setAttribute('fill','#f59e0b');l3.setAttribute('fill','#f59e0b');break;
+    case'excited':svg.className='rb';mo.setAttribute('d',MB);$('ant').setAttribute('fill','var(--orange)');
+      l1.setAttribute('fill','var(--gold)');l2.setAttribute('fill','var(--gold)');l3.setAttribute('fill','var(--gold)');
+      l1.style.animation='lb .3s infinite';l2.style.animation='lb .3s .1s infinite';l3.style.animation='lb .3s .2s infinite';
+      al.style.animation='awl .4s ease-in-out infinite';ar.style.animation='awr .4s ease-in-out .2s infinite';break;
+    case'rw':svg.className='rw';mo.setAttribute('d',MF);$('ant').setAttribute('fill','var(--red)');
+      l1.setAttribute('fill','#ef4444');l2.setAttribute('fill','#ef4444');l3.setAttribute('fill','#ef4444');
+      setTimeout(function(){if($('rsvg')&&$('rsvg').className==='rw')robot('idle',null);},1500);break;
+    case'sad':svg.className='rf';mo.setAttribute('d',MF);$('ant').setAttribute('fill','#6b7280');
+      l1.setAttribute('fill','#374151');l2.setAttribute('fill','#374151');l3.setAttribute('fill','#374151');break;
+    case'rc':svg.className='rc';mo.setAttribute('d',MS);
+      al.style.animation='awl .5s ease-in-out infinite';ar.style.animation='awr .5s ease-in-out .25s infinite';
+      l1.style.animation='lb .4s infinite';l2.style.animation='lb .4s .13s infinite';l3.style.animation='lb .4s .26s infinite';break;
+  }
+  if(speech!=null)$('speech').textContent=speech||'';
+}
+function setChest(t){$('chest').textContent=t;}
+
+/* ════════════════════════════════
+   TOASTS + CONFETTI
+════════════════════════════════ */
+function toast(msg,cls){
+  var w=$('toasts'),el=document.createElement('div');
+  el.className='toast '+(cls||'tgold');el.textContent=msg;
+  w.appendChild(el);setTimeout(function(){el.remove();},2800);
+}
+function burst(n){
+  var cols=['var(--gold)','var(--orange)','#22c55e','#3b82f6','#ec4899','#a78bfa','var(--red)'];
+  for(var i=0;i<n;i++){(function(ii){setTimeout(function(){
+    var el=document.createElement('div');el.className='confetti';
+    el.style.left=Math.random()*100+'vw';el.style.top='-14px';
+    el.style.background=cols[Math.floor(Math.random()*cols.length)];
+    el.style.borderRadius=Math.random()>.5?'50%':'2px';
+    el.style.animationDuration=(1.4+Math.random()*.8)+'s';
+    document.body.appendChild(el);setTimeout(function(){el.remove();},3000);
+  },ii*55);})(i);}
+}
+
+/* ═══ EYE BLINK ═══ */
+function blinkLoop(){
+  setInterval(function(){
+    var l=$('eyl'),r=$('eyr');
+    if(l){l.style.transform='scaleY(0.08)';l.style.transformOrigin='center';}
+    if(r){r.style.transform='scaleY(0.08)';r.style.transformOrigin='center';}
+    setTimeout(function(){if(l)l.style.transform='scaleY(1)';if(r)r.style.transform='scaleY(1)';},95);
+  },3200+Math.random()*1800);
+}
+blinkLoop();
+
+/* ═══ KEYBOARD ═══ */
+var kbVis=false;
+function toggleKb(){kbVis=!kbVis;$('kbguide').classList.toggle('vis',kbVis);}
+document.addEventListener('keydown',function(e){
+  if(e.target.tagName==='INPUT')return;
+  var p=G.phase;
+  switch(e.key.toLowerCase()){
+    case 'd':if(p==='draw'||p==='action')actDraw();break;
+    case 'p':if(p==='draw')actPick();break;
+    case 'b':if(p==='action')actBig();break;
+    case '1':if(p==='action')actSmall(1);break;
+    case '2':if(p==='action')actSmall(2);break;
+    case '3':if(p==='action')actSmall(3);break;
+    case 'r':if(p==='action')actReveal();break;
+    case 'x':if(p==='action')actDiscard();break;
+    case 's':if(p==='action')actShow();break;
+    case 'escape':G.sel=[];if(p==='action'){render();updateBtns();}break;
+    case '?':toggleKb();break;
+  }
+});
+
+/* ═══ INIT ═══ */
+go('landing');
+</script>
+</body>
+</html>
